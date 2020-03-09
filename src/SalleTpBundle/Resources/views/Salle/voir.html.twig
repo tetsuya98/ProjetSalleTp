@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Salle</title>
+	</head>
+	<body>
+		<img src="/images/image.jpg">
+		<h1>Salle {{ numero }}</h1>
+			<p>Lien vers <a href="{{ path('salle_tp_voir', { 'numero': numero + 1 }) }}"> la suivante</a></p>
+			<p>Lien vers <a href="{{ path('salle_tp_accueil') }}"> l'accueil</a></p>
+			</p>
+	</body>
+</html>

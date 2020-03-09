@@ -1,0 +1,4 @@
+exo1_homepage:
+    path:     /
+    defaults: { _controller: Exo1Bundle:Default:index }
+    
