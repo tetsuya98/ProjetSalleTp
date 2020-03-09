@@ -14,5 +14,7 @@
             Voici quelques informations concernant la salles numéro : {{ numero }}.<br \>
             blablablablabla {{ numero }} blablablabla {{ numero }} blablablabla
         </p>
+        <p>lien vers <a href="{{ path('salle_tp_afficher', { 'numero': numero + 1 }) }}">Suivante</a></p>
+        <p>lien vers <a href="{{ path('salle_tp_accueil') }}">Accueil</a></p>
     </body>
 </html>
