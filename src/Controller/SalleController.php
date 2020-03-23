@@ -1,19 +1,26 @@
 <?php 
 namespace App\Controller;
+use App\Form\Type\SalleType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Salle;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class SalleController extends AbstractController{
-    public function accueil() {
-        $nombre = rand(1, 84);
-        return $this->render('salle/accueil.html.twig', array('numero' => $nombre));
+    public function accueil(Session $session) {
+        if ($session->has('nbreFois'))
+            $session->set('nbreFois', $session->get('nbreFois')+1);
+        else
+            $session->set('nbreFois', 1);
+        return $this->render('salle/accueil.html.twig', array('numero' => $session->get('nbreFois')));
+        //$nombre = rand(1, 84);
+        //return $this->render('salle/accueil.html.twig', array('numero' => $nombre));
     }
 
     public function afficher($numero) {
@@ -87,12 +94,14 @@ class SalleController extends AbstractController{
 
     public function ajouter2(Request $request) {
         $salle = new Salle;
-        $form = $this->createFormBuilder($salle)
+        /*$form = $this->createFormBuilder($salle)
             ->add('batiment', TextType::class)
             ->add('etage', IntegerType::class)
             ->add('numero', IntegerType::class)
             ->add('envoyer', SubmitType::class)
-            ->getForm();
+            ->getForm();*/
+        $form = $this->createForm(SalleType::class, $salle, ['action' => $this->generateUrl('salle_tp_ajouter2')]);
+        $form->add('submit', SubmitType::class, array('label' => 'Ajouter'));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -103,6 +112,13 @@ class SalleController extends AbstractController{
         }
         return $this->render('salle/ajouter2.html.twig',
             array('monFormulaire' => $form->createView()));
+    }
+
+    public function navigation() {
+        $salles = $this->getDoctrine()
+            ->getRepository(Salle::class)->findAll();
+        return $this->render('salle/navigation.html.twig',
+            array('salles' => $salles));
     }
 
 
